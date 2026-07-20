@@ -14,6 +14,12 @@ const ListaCompraSchema = new EntitySchema({
             length: 20,
             default: "abierta"
         },
+        total: {
+            type: "decimal",
+            precision: 10,
+            scale: 2,
+            default: 0
+        },
         created_at: {
             type: "timestamp",
             default: () => "CURRENT_TIMESTAMP"

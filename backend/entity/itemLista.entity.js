@@ -13,6 +13,12 @@ const ItemListaSchema = new EntitySchema({
             type: "int",
             default: 1
         },
+        precio_unitario: {
+            type: "decimal",
+            precision: 10,
+            scale: 2,
+            default: 0
+        },
         comprado: {
             type: "boolean",
             default: false
