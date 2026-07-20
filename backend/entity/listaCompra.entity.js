@@ -30,14 +30,20 @@ const ListaCompraSchema = new EntitySchema({
         }
     },
     relations: {
-        assignedUser: {
+        usuarios: {
             target: "User",
-            type: "many-to-one",
-            joinColumn: {
-                name: "assigned_to"
-            },
-            onDelete: "SET NULL",
-            nullable: true
+            type: "many-to-many",
+            joinTable: {
+                name: "listas_usuarios",
+                joinColumn: {
+                    name: "lista_id",
+                    referencedColumnName: "id"
+                },
+                inverseJoinColumn: {
+                    name: "user_id",
+                    referencedColumnName: "id"
+                }
+            }
         },
         items: {
             target: "ItemLista",
