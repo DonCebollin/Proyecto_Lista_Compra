@@ -1,8 +1,14 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 import { DataSource } from "typeorm";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, ".env") });
 import productosSchema from "./entity/productos.entity.js";
-import ListaComprasSchema from "./entity/listaCompras.entity.js";
-import ItemListaComprasSchema from "./entity/itemListaCompras.entity.js";
+import ListaCompraSchema from "./entity/listaCompra.entity.js";
+import ItemListaSchema from "./entity/itemLista.entity.js";
+import UserSchema from "./entity/user.entity.js";
 
 export const AppDataSource = new DataSource({
     type: "postgres",
@@ -12,5 +18,5 @@ export const AppDataSource = new DataSource({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     synchronize: true,
-    entities: [productosSchema, ListaComprasSchema, ItemListaComprasSchema],
+    entities: [productosSchema, ListaCompraSchema, ItemListaSchema, UserSchema],
 });
