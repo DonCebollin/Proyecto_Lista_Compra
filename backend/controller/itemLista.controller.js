@@ -2,7 +2,6 @@ import { AppDataSource } from "../data-source.js";
 import ItemListaSchema from "../entity/itemLista.entity.js";
 import ListaCompraSchema from "../entity/listaCompra.entity.js";
 import ProductosSchema from "../entity/productos.entity.js";
-import ProductosSchema from "../entity/productos.entity.js";
 
 const itemListRepository = AppDataSource.getRepository(ItemListaSchema);
 const listaCompraRepository = AppDataSource.getRepository(ListaCompraSchema);
@@ -55,7 +54,7 @@ export async function marcarComprado(req, res) {
 
         res.status(200).json(item);
     } catch (error) {
-        res.status(500).status({ mensaje: "Error al marcar producto", error: error.message});
+        res.status(500).json({ mensaje: "Error al marcar producto", error: error.message});
     }
 }
 
@@ -64,7 +63,7 @@ export async function updateItemLista(req, res) {
         const { id } = req.params;
         const { cantidad, precio_unitario} = req.body;
 
-        const item = itemListRepository.findOne({
+        const item = await itemListRepository.findOne({
             where: { id },
             relations: { lista: true}
         });
@@ -87,3 +86,28 @@ export async function updateItemLista(req, res) {
         res.status(500).json({ mensaje: "Error al actualizar item", error: error.message});
     }
 }
+
+export async function deleteItemLista(req, res) {
+    try {
+        const { id } = req.params;
+
+        const item = await itemListRepository.findOne({
+            where: { id },
+            relations: { lista: true }
+        });
+        if(!item){
+            return res.status(404).json({ mensaje: "Item no encontrado "});
+        }
+
+        const subtotal = item.cantidad * Number(item.precio_unitario);
+
+        await itemListRepository.remove(item);
+
+        item.lista.total = Number(item.lista.total) - subtotal;
+        await listaCompraRepository.save(item.lista);
+
+        res.status(200).json({ mensaje: "Item Eliminado"});
+        } catch ( error ){
+            res.status(500).json({ mensaje: "Error al eliminar item", error: error.message});
+        }
+    }

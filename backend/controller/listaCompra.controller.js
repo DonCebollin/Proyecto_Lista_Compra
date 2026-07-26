@@ -48,7 +48,7 @@ export async function cerrarListaActiva(req, res) {
             return res.status(404).json({ mensaje: "No hay una lista activa"});
         }
 
-        lista.estado = "Cerrada";
+        lista.estado = "cerrada";
         lista.closed_at = new Date();
 
         await listaCompraRepository.save(lista);
@@ -62,12 +62,12 @@ export async function cerrarListaActiva(req, res) {
 export async function getHistorialListas(req, res) {
     try {
         const listas = await listaCompraRepository.find({
-            where: { estado: "Cerrada "},
+            where: { estado: "cerrada"},
             relations: { items: { producto: true }, usuarios: true},
             order: { closed_at: "DESC"}
         });
 
-        res.status(200).json(lista);
+        res.status(200).json(listas);
     } catch (error) {
         res.status(500).json({ mensaje: "Error al obtener historial", error: error.message});
     }

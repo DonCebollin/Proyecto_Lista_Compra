@@ -51,11 +51,10 @@ export async function deleteProducto(req, res) {
 
         const producto = await productosRepository.findOneBy({ id });
         if(!producto){
-            res.status(400).json({ mensaje: "Producto no encontrado"});
+            return res.status(400).json({ mensaje: "Producto no encontrado"});
         }
-
         await productosRepository.remove(producto);
-
+        
         res.status(200).json({ mensaje: "Producto eliminado correctamente"});
     } catch (error) {
         res.status(500).json({ mensaje: "Error al eliminar producto", error: error.message})
